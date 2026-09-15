@@ -1,0 +1,7 @@
+/build/
+/.cache/
+/.vscode/
+*.uf2
+!dist/*.uf2
+*.elf
+*.map

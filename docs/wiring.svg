@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="760" viewBox="0 0 1200 760">
+  <defs>
+    <style>
+      .title{font:700 28px sans-serif;fill:#172033}.h{font:700 20px sans-serif;fill:#172033}
+      .t{font:16px sans-serif;fill:#172033}.small{font:14px sans-serif;fill:#38445c}
+      .box{fill:#f6f8fc;stroke:#40506d;stroke-width:2}.pico{fill:#dff4ea;stroke:#227653;stroke-width:3}
+      .warn{fill:#fff4d6;stroke:#d08a00;stroke-width:2}.wire{fill:none;stroke-width:5}
+    </style>
+  </defs>
+  <rect width="1200" height="760" fill="white"/>
+  <text x="600" y="45" text-anchor="middle" class="title">HKT-4000 → Raspberry Pi Pico → PC USB 配線図</text>
+
+  <rect x="45" y="100" width="285" height="430" rx="18" class="box"/>
+  <text x="188" y="140" text-anchor="middle" class="h">Dreamcastキーボード</text>
+  <text x="188" y="167" text-anchor="middle" class="t">HKT-4000</text>
+  <rect x="90" y="205" width="195" height="270" rx="12" fill="#e8ebf2" stroke="#40506d" stroke-width="2"/>
+  <text x="188" y="237" text-anchor="middle" class="t">延長ケーブルのメス側</text>
+  <circle cx="275" cy="285" r="7" fill="#d83232"/><text x="105" y="291" class="t">+5 V（通常: 赤）</text>
+  <circle cx="275" cy="335" r="7" fill="#259b55"/><text x="105" y="341" class="t">SDCKA（通常: 緑）</text>
+  <circle cx="275" cy="385" r="7" fill="#2879d0"/><text x="105" y="391" class="t">SDCKB（通常: 青）</text>
+  <circle cx="275" cy="435" r="7" fill="#777"/><text x="105" y="441" class="t">GND 2本（白/黒）</text>
+
+  <rect x="800" y="100" width="350" height="510" rx="18" class="pico"/>
+  <text x="975" y="140" text-anchor="middle" class="h">Raspberry Pi Pico (RP2040)</text>
+  <rect x="900" y="165" width="150" height="65" rx="8" fill="#c7d2e5" stroke="#40506d"/>
+  <text x="975" y="193" text-anchor="middle" class="t">micro-USB</text>
+  <text x="975" y="215" text-anchor="middle" class="small">PCへ（USB HID）</text>
+
+  <circle cx="815" cy="285" r="8" fill="#d83232"/><text x="840" y="291" class="t">VBUS / 物理40番（5 V）</text>
+  <circle cx="815" cy="335" r="8" fill="#259b55"/><text x="840" y="341" class="t">GPIO10 / 物理14番</text>
+  <circle cx="815" cy="385" r="8" fill="#2879d0"/><text x="840" y="391" class="t">GPIO11 / 物理15番</text>
+  <circle cx="815" cy="435" r="8" fill="#333"/><text x="840" y="441" class="t">GND / 物理13, 18等</text>
+
+  <path d="M282 285 H440" class="wire" stroke="#d83232"/>
+  <rect x="440" y="266" width="150" height="38" rx="8" fill="#fff" stroke="#d83232" stroke-width="2"/>
+  <text x="515" y="291" text-anchor="middle" class="t">PTC 0.1～0.25 A</text>
+  <path d="M590 285 H807" class="wire" stroke="#d83232"/>
+
+  <path d="M282 335 H470" class="wire" stroke="#259b55"/>
+  <rect x="470" y="318" width="90" height="34" fill="#fff" stroke="#259b55" stroke-width="2"/>
+  <text x="515" y="341" text-anchor="middle" class="t">33 Ω</text>
+  <path d="M560 335 H807" class="wire" stroke="#259b55"/>
+
+  <path d="M282 385 H470" class="wire" stroke="#2879d0"/>
+  <rect x="470" y="368" width="90" height="34" fill="#fff" stroke="#2879d0" stroke-width="2"/>
+  <text x="515" y="391" text-anchor="middle" class="t">33 Ω</text>
+  <path d="M560 385 H807" class="wire" stroke="#2879d0"/>
+
+  <path d="M282 435 H807" class="wire" stroke="#333"/>
+
+  <rect x="45" y="570" width="690" height="145" rx="12" class="warn"/>
+  <text x="70" y="606" class="h">重要</text>
+  <text x="70" y="637" class="t">• 線色は参考値。必ず導通テスターで端子と信号を確認する。</text>
+  <text x="70" y="667" class="t">• +5 VをGPIO/3V3へ接続しない。Dreamcast本体との同時給電をしない。</text>
+  <text x="70" y="697" class="t">• SDCKA/Bは3.3 V TTL。レベル変換器や5 Vプルアップは使用しない。</text>
+
+  <rect x="790" y="645" width="360" height="70" rx="10" fill="#eef3fb" stroke="#40506d"/>
+  <text x="970" y="674" text-anchor="middle" class="small">任意: 各SDCK線からGNDへ</text>
+  <text x="970" y="699" text-anchor="middle" class="small">低容量3.3 V ESD保護素子を追加</text>
+</svg>
+
