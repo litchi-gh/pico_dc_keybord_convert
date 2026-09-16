@@ -68,6 +68,14 @@ add_executable(dc_keyboard_usb
   src/main.cpp
   src/usb_descriptors.c
 )
+if(PICO_BOARD STREQUAL "waveshare_rp2040_zero")
+  set(DC_KEYBOARD_OUTPUT_NAME dc_keyboard_usb_rp2040_zero)
+else()
+  set(DC_KEYBOARD_OUTPUT_NAME dc_keyboard_usb)
+endif()
+set_target_properties(dc_keyboard_usb PROPERTIES
+  OUTPUT_NAME ${DC_KEYBOARD_OUTPUT_NAME}
+)
 target_include_directories(dc_keyboard_usb PRIVATE src)
 target_link_libraries(dc_keyboard_usb PRIVATE
   maple_bus
@@ -81,4 +89,4 @@ pico_enable_stdio_usb(dc_keyboard_usb 0)
 pico_enable_stdio_uart(dc_keyboard_usb 0)
 pico_add_extra_outputs(dc_keyboard_usb)
 
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/dc_keyboard_usb.uf2 DESTINATION .)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${DC_KEYBOARD_OUTPUT_NAME}.uf2 DESTINATION .)
