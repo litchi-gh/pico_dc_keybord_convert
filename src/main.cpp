@@ -14,10 +14,15 @@ namespace {
 
 constexpr uint kMaplePinA = 10;
 constexpr uint kMaplePinB = 11;
+#ifdef PICO_DEFAULT_LED_PIN
 constexpr int kLedPin = PICO_DEFAULT_LED_PIN;
+#else
+constexpr int kLedPin = -1;
+#endif
 constexpr uint8_t kKeyboardAddress = 0x20;
 constexpr uint8_t kHostAddress = 0x00;
 constexpr uint32_t kPollIntervalUs = 8000;
+constexpr uint32_t kProbeIntervalUs = 250000;
 constexpr uint32_t kDisconnectReleaseUs = 100000;
 
 static_assert(kMaplePinB == kMaplePinA + 1,
@@ -28,6 +33,13 @@ std::array<uint8_t, 8> sent_report{};
 bool report_pending = true;
 uint64_t next_poll_us = 0;
 uint64_t last_valid_response_us = 0;
+bool keyboard_detected = false;
+
+enum class ResponseType {
+  None,
+  DeviceInfo,
+  KeyboardCondition,
+};
 
 void queue_keyboard_report(uint8_t modifiers, const uint8_t *keys) {
   std::array<uint8_t, 8> next{};
@@ -50,30 +62,60 @@ void service_usb_report() {
   }
 }
 
-bool parse_keyboard_response(const MapleBusInterface::Status &status) {
+ResponseType parse_keyboard_response(const MapleBusInterface::Status &status) {
   if (status.phase != MapleBusInterface::Phase::READ_COMPLETE ||
-      status.readBuffer == nullptr || status.readBufferLen < 4) {
-    return false;
+      status.readBuffer == nullptr || status.readBufferLen < 1) {
+    return ResponseType::None;
   }
 
   MaplePacket response(status.readBuffer, status.readBufferLen,
                        status.rxByteOrder);
-  if (response.frame.command != COMMAND_RESPONSE_DATA_XFER ||
-      response.frame.senderAddr != kKeyboardAddress ||
-      response.frame.recipientAddr != kHostAddress ||
-      response.payload.size() < 3 ||
-      response.payload[0] != DEVICE_FN_KEYBOARD) {
-    return false;
+  if (response.frame.senderAddr != kKeyboardAddress ||
+      response.frame.recipientAddr != kHostAddress) {
+    return ResponseType::None;
   }
 
-  // Payload words are little-endian in HOST order:
+  if (response.frame.command == COMMAND_RESPONSE_DEVICE_INFO &&
+      !response.payload.empty() &&
+      (response.payload[0] & DEVICE_FN_KEYBOARD) != 0) {
+    return ResponseType::DeviceInfo;
+  }
+
+  if (response.frame.command != COMMAND_RESPONSE_DATA_XFER ||
+      response.payload.size() < 3 ||
+      response.payload[0] != DEVICE_FN_KEYBOARD) {
+    return ResponseType::None;
+  }
+
+  // HOST-order uint32_t values contain the wire bytes from MSB to LSB.
   // word 0: function (0x40)
   // word 1: modifiers, keyboard LEDs, key[0], key[1]
   // word 2: key[2]..key[5]
-  uint8_t condition[8];
-  std::memcpy(condition, &response.payload[1], sizeof(condition));
-  queue_keyboard_report(condition[0], &condition[2]);
-  return true;
+  // Do not memcpy these words on the little-endian RP2040: that reverses each
+  // group of four bytes and turns key codes into modifier bits.
+  const uint32_t first = response.payload[1];
+  const uint32_t second = response.payload[2];
+  const uint8_t modifiers = static_cast<uint8_t>(first >> 24);
+  const std::array<uint8_t, 6> keys{
+      static_cast<uint8_t>(first >> 8),
+      static_cast<uint8_t>(first),
+      static_cast<uint8_t>(second >> 24),
+      static_cast<uint8_t>(second >> 16),
+      static_cast<uint8_t>(second >> 8),
+      static_cast<uint8_t>(second),
+  };
+  queue_keyboard_report(modifiers, keys.data());
+  return ResponseType::KeyboardCondition;
+}
+
+void send_device_info_request(MapleBusInterface &bus) {
+  MaplePacket request(MaplePacket::Frame{
+      .command = COMMAND_DEVICE_INFO_REQUEST,
+      .recipientAddr = kKeyboardAddress,
+      .senderAddr = kHostAddress,
+      .length = 0,
+  });
+  bus.write(request, true);
 }
 
 void send_get_condition(MapleBusInterface &bus) {
@@ -106,7 +148,13 @@ int main() {
     const uint64_t now = time_us_64();
     const auto status = maple->processEvents(now);
 
-    if (parse_keyboard_response(status)) {
+    const ResponseType response = parse_keyboard_response(status);
+    if (response == ResponseType::DeviceInfo) {
+      keyboard_detected = true;
+      last_valid_response_us = now;
+      next_poll_us = now + kPollIntervalUs;
+    } else if (response == ResponseType::KeyboardCondition) {
+      keyboard_detected = true;
       last_valid_response_us = now;
       if constexpr (kLedPin >= 0) {
         gpio_put(kLedPin, 1);
@@ -117,14 +165,21 @@ int main() {
         now - last_valid_response_us > kDisconnectReleaseUs) {
       queue_keyboard_report(0, std::array<uint8_t, 6>{}.data());
       last_valid_response_us = 0;
+      keyboard_detected = false;
+      next_poll_us = now;
       if constexpr (kLedPin >= 0) {
         gpio_put(kLedPin, 0);
       }
     }
 
     if (!maple->isBusy() && now >= next_poll_us) {
-      send_get_condition(*maple);
-      next_poll_us = now + kPollIntervalUs;
+      if (keyboard_detected) {
+        send_get_condition(*maple);
+        next_poll_us = now + kPollIntervalUs;
+      } else {
+        send_device_info_request(*maple);
+        next_poll_us = now + kProbeIntervalUs;
+      }
     }
 
     service_usb_report();

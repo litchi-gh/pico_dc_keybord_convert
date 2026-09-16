@@ -8,39 +8,39 @@
     </style>
   </defs>
   <rect width="1200" height="760" fill="white"/>
-  <text x="600" y="45" text-anchor="middle" class="title">HKT-4000 → Pico / RP2040-Zero → PC USB 配線図</text>
+  <text x="600" y="45" text-anchor="middle" class="title">HKT-4000 → Pico / RP2040-Zero → PC USB Wiring</text>
 
   <rect x="45" y="100" width="285" height="430" rx="18" class="box"/>
-  <text x="188" y="140" text-anchor="middle" class="h">Dreamcastキーボード</text>
+  <text x="188" y="140" text-anchor="middle" class="h">Dreamcast Keyboard</text>
   <text x="188" y="167" text-anchor="middle" class="t">HKT-4000</text>
   <rect x="80" y="205" width="215" height="310" rx="12" fill="#e8ebf2" stroke="#40506d" stroke-width="2"/>
-  <text x="188" y="237" text-anchor="middle" class="t">延長ケーブルのメス側</text>
-  <circle cx="285" cy="275" r="7" fill="#d83232"/><text x="95" y="281" class="t">1: SDCKA（赤）</text>
-  <circle cx="285" cy="325" r="7" fill="#2879d0"/><text x="95" y="331" class="t">2: +5 V（青）</text>
-  <circle cx="285" cy="375" r="7" fill="#222"/><text x="95" y="381" class="t">3: GND（黒）</text>
-  <circle cx="285" cy="425" r="7" fill="#259b55"/><text x="95" y="431" class="t">4: Sense/GND（緑）</text>
-  <circle cx="285" cy="475" r="7" fill="white" stroke="#687386" stroke-width="2"/><text x="95" y="481" class="t">5: SDCKB（白）</text>
+  <text x="188" y="237" text-anchor="middle" class="t">Female extension connector</text>
+  <circle cx="285" cy="275" r="7" fill="#d83232"/><text x="95" y="281" class="t">1: SDCKA (red)</text>
+  <circle cx="285" cy="325" r="7" fill="#2879d0"/><text x="95" y="331" class="t">2: +5 V (blue)</text>
+  <circle cx="285" cy="375" r="7" fill="#222"/><text x="95" y="381" class="t">3: GND (black)</text>
+  <circle cx="285" cy="425" r="7" fill="#259b55"/><text x="95" y="431" class="t">4: Sense/GND (green)</text>
+  <circle cx="285" cy="475" r="7" fill="white" stroke="#687386" stroke-width="2"/><text x="95" y="481" class="t">5: SDCKB (white)</text>
 
   <rect x="800" y="100" width="350" height="510" rx="18" class="pico"/>
   <text x="975" y="140" text-anchor="middle" class="h">Pico / RP2040-Zero</text>
   <rect x="900" y="165" width="150" height="65" rx="8" fill="#c7d2e5" stroke="#40506d"/>
-  <text x="975" y="193" text-anchor="middle" class="t">micro-USB</text>
-  <text x="975" y="215" text-anchor="middle" class="small">PCへ（USB HID）</text>
+  <text x="975" y="193" text-anchor="middle" class="t">USB</text>
+  <text x="975" y="215" text-anchor="middle" class="small">To PC (USB HID)</text>
 
-  <circle cx="815" cy="275" r="8" fill="#d83232"/><text x="840" y="281" class="t">GP10（Pico: 物理14番）</text>
-  <circle cx="815" cy="325" r="8" fill="#2879d0"/><text x="840" y="331" class="t">Pico: VBUS/40、Zero: 5V</text>
+  <circle cx="815" cy="275" r="8" fill="#d83232"/><text x="840" y="281" class="t">GP10 (Pico physical pin 14)</text>
+  <circle cx="815" cy="325" r="8" fill="#2879d0"/><text x="840" y="331" class="t">Pico: VBUS/40, Zero: 5V</text>
   <circle cx="815" cy="375" r="8" fill="#222"/><text x="840" y="381" class="t">GND</text>
   <circle cx="815" cy="425" r="8" fill="#259b55"/><text x="840" y="431" class="t">GND</text>
-  <circle cx="815" cy="475" r="8" fill="white" stroke="#687386" stroke-width="2"/><text x="840" y="481" class="t">GP11（Pico: 物理15番）</text>
+  <circle cx="815" cy="475" r="8" fill="white" stroke="#687386" stroke-width="2"/><text x="840" y="481" class="t">GP11 (Pico physical pin 15)</text>
 
   <path d="M292 275 H470" class="wire" stroke="#d83232"/>
   <rect x="470" y="258" width="90" height="34" fill="#fff" stroke="#d83232" stroke-width="2"/>
-  <text x="515" y="281" text-anchor="middle" class="t">33 Ω</text>
+  <text x="515" y="281" text-anchor="middle" class="t">33 ohm</text>
   <path d="M560 275 H807" class="wire" stroke="#d83232"/>
 
   <path d="M292 325 H440" class="wire" stroke="#2879d0"/>
   <rect x="440" y="306" width="150" height="38" rx="8" fill="#fff" stroke="#2879d0" stroke-width="2"/>
-  <text x="515" y="331" text-anchor="middle" class="t">PTC 0.1～0.25 A</text>
+  <text x="515" y="331" text-anchor="middle" class="t">PTC 0.1–0.25 A</text>
   <path d="M590 325 H807" class="wire" stroke="#2879d0"/>
 
   <path d="M292 375 H807" class="wire" stroke="#222"/>
@@ -49,17 +49,17 @@
   <path d="M292 475 H470" fill="none" stroke="#687386" stroke-width="9"/>
   <path d="M292 475 H470" class="wire" stroke="white"/>
   <rect x="470" y="458" width="90" height="34" fill="#fff" stroke="#687386" stroke-width="2"/>
-  <text x="515" y="481" text-anchor="middle" class="t">33 Ω</text>
+  <text x="515" y="481" text-anchor="middle" class="t">33 ohm</text>
   <path d="M560 475 H807" fill="none" stroke="#687386" stroke-width="9"/>
   <path d="M560 475 H807" class="wire" stroke="white"/>
 
   <rect x="45" y="570" width="690" height="145" rx="12" class="warn"/>
-  <text x="70" y="606" class="h">重要</text>
-  <text x="70" y="637" class="t">• 線色は参考値。必ず導通テスターで端子と信号を確認する。</text>
-  <text x="70" y="667" class="t">• +5 VをGPIO/3V3へ接続しない。Dreamcast本体との同時給電をしない。</text>
-  <text x="70" y="697" class="t">• SDCKA/Bは3.3 V TTL。レベル変換器や5 Vプルアップは使用しない。</text>
+  <text x="70" y="606" class="h">Important</text>
+  <text x="70" y="637" class="t">• Verify connector pins and signals with a continuity tester.</text>
+  <text x="70" y="667" class="t">• Never connect +5 V to GPIO/3V3 or power from the console at the same time.</text>
+  <text x="70" y="697" class="t">• SDCKA/B are 3.3 V signals. Do not use a 5 V pull-up.</text>
 
   <rect x="790" y="645" width="360" height="70" rx="10" fill="#eef3fb" stroke="#40506d"/>
-  <text x="970" y="674" text-anchor="middle" class="small">任意: 各SDCK線からGNDへ</text>
-  <text x="970" y="699" text-anchor="middle" class="small">低容量3.3 V ESD保護素子を追加</text>
+  <text x="970" y="674" text-anchor="middle" class="small">Optional: low-capacitance 3.3 V ESD</text>
+  <text x="970" y="699" text-anchor="middle" class="small">protection from each SDCK line to GND</text>
 </svg>
